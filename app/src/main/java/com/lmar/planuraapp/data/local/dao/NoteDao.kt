@@ -23,6 +23,23 @@ interface NoteDao {
     @Update
     suspend fun updateNote(note: NoteEntity)
 
+    @Query("""
+        UPDATE notes 
+        SET title = :title, 
+            content = :content, 
+            color = :color, 
+            updatedAt = :updatedAt, 
+            pendingSync = 1
+        WHERE id = :id
+    """)
+    suspend fun updateNoteFields(
+        id: String,
+        title: String?,
+        content: String?,
+        color: String,
+        updatedAt: Long
+    )
+
     @Query("DELETE FROM notes WHERE id = :noteId")
     suspend fun deleteNote(noteId: String)
 

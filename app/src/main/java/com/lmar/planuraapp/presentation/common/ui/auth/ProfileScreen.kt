@@ -30,7 +30,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -52,7 +51,6 @@ import com.lmar.planuraapp.R
 import com.lmar.planuraapp.core.ui.theme.PlanuraAppTheme
 import com.lmar.planuraapp.core.utils.Constants.PHOTO_SIZE
 import com.lmar.planuraapp.domain.model.User
-import com.lmar.planuraapp.presentation.common.components.AppBar
 import com.lmar.planuraapp.presentation.common.components.FormTextField
 import com.lmar.planuraapp.presentation.common.components.GlowingCard
 import com.lmar.planuraapp.presentation.common.components.GradientButton
@@ -64,6 +62,7 @@ import com.lmar.planuraapp.presentation.common.event.ProfileEvent
 import com.lmar.planuraapp.presentation.common.state.ProfileState
 import com.lmar.planuraapp.presentation.common.viewmodel.auth.ProfileViewModel
 import com.lmar.planuraapp.presentation.navigation.handleUiEvents
+import com.lmar.planuraapp.presentation.ui.component.ScreenScaffold
 
 @Composable
 fun ProfileScreenContainer(
@@ -100,163 +99,23 @@ private fun ProfileScreen(
         onEvent(ProfileEvent.EnteredImageUri(uri!!))
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black)
+    ScreenScaffold(
+        title = "Perfil"
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.bg1),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-        )
-
-        Column {
-            AppBar(
-                "Perfil",
-                onBackAction = { onEvent(ProfileEvent.ToBack) },
-                state = rememberTopAppBarState()
-            )
+                .padding(horizontal = 32.dp, vertical = 16.dp),
+        ) {
+            Spacer(modifier = Modifier.size(16.dp))
 
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 32.dp, vertical = 16.dp),
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Spacer(modifier = Modifier.size(16.dp))
-
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    if (profileState.isAuthenticated) {
-                        //Información del Usuario
-                        Box(modifier = Modifier.size(PHOTO_SIZE)) {
-                            GlowingCard(
-                                modifier = Modifier
-                                    .size(PHOTO_SIZE)
-                                    .padding(5.dp),
-                                glowingColor = MaterialTheme.colorScheme.tertiary,
-                                containerColor = MaterialTheme.colorScheme.tertiary,
-                                cornerRadius = Int.MAX_VALUE.dp
-                            ) {
-                                if (profileState.imageUri == null) {
-                                    profileState.user.imageUrl.let { imageUrl ->
-                                        if (imageUrl.isEmpty()) {
-                                            ImageCircle(
-                                                painter = painterResource(R.drawable.default_avatar),
-                                                modifier = Modifier.size(PHOTO_SIZE)
-                                            )
-                                        } else {
-                                            ImageCircle(
-                                                imageUrl = imageUrl,
-                                                modifier = Modifier.size(PHOTO_SIZE)
-                                            )
-                                        }
-                                    }
-                                } else {
-                                    ImageCircle(
-                                        painter = rememberAsyncImagePainter(profileState.imageUri),
-                                        modifier = Modifier.size(PHOTO_SIZE)
-                                    )
-                                }
-                            }
-
-                            if (profileState.isShowingForm) {
-                                IconButton(
-                                    onClick = { launcher.launch("image/*") },
-                                    modifier = Modifier
-                                        .size(32.dp)
-                                        .clip(CircleShape)
-                                        .background(MaterialTheme.colorScheme.tertiary)
-                                        .align(Alignment.CenterEnd)
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.CameraAlt,
-                                        contentDescription = "Camara",
-                                        tint = Color.White,
-                                        modifier = Modifier.size(24.dp)
-                                    )
-                                }
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.size(8.dp))
-
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 32.dp, vertical = 8.dp),
-                            verticalAlignment = Alignment.CenterVertically, // Alinea los elementos verticalmente
-                            horizontalArrangement = Arrangement.SpaceBetween // Distribuye los elementos en la fila
-                        ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                HeadingTextComponent(
-                                    value = profileState.user.names,
-                                    textColor = MaterialTheme.colorScheme.onPrimary,
-                                    fontSize = 16.sp
-                                )
-
-                                NormalTextComponent(
-                                    value = profileState.user.email, fontSize = 14.sp
-                                )
-
-                                HeadingTextComponent(
-                                    value = "${profileState.user.score} pts",
-                                    textColor = MaterialTheme.colorScheme.primary,
-                                    fontSize = 16.sp
-                                )
-                            }
-
-                            if (!profileState.isShowingForm) {
-                                IconButton(
-                                    onClick = { onEvent(ProfileEvent.ShowForm(true)) },
-                                    modifier = Modifier
-                                        .size(32.dp)
-                                        .clip(CircleShape)
-                                        .background(MaterialTheme.colorScheme.primary)
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Edit,
-                                        contentDescription = "Edit",
-                                        tint = Color.White,
-                                        modifier = Modifier.size(24.dp)
-                                    )
-                                }
-                            } else {
-                                IconButton(
-                                    onClick = { onEvent(ProfileEvent.ShowForm(false)) },
-                                    modifier = Modifier
-                                        .size(32.dp)
-                                        .clip(CircleShape)
-                                        .background(MaterialTheme.colorScheme.tertiary)
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Close,
-                                        contentDescription = "Edit",
-                                        tint = Color.White,
-                                        modifier = Modifier.size(24.dp)
-                                    )
-                                }
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.height(12.dp))
-
-                        if (profileState.isShowingForm) {
-                            //Formulario
-                            FormTextField(
-                                value = profileState.user.names,
-                                label = "Nombres",
-                                icon = Icons.Default.Person,
-                                onValueChange = {
-                                    onEvent(ProfileEvent.EnteredNames(it))
-                                })
-                        }
-                    } else {
-                        //Default
+                if (profileState.isAuthenticated) {
+                    //Información del Usuario
+                    Box(modifier = Modifier.size(PHOTO_SIZE)) {
                         GlowingCard(
                             modifier = Modifier
                                 .size(PHOTO_SIZE)
@@ -265,76 +124,198 @@ private fun ProfileScreen(
                             containerColor = MaterialTheme.colorScheme.tertiary,
                             cornerRadius = Int.MAX_VALUE.dp
                         ) {
-                            Image(
-                                painter = painterResource(R.drawable.default_avatar),
-                                contentDescription = "Logo",
-                                contentScale = ContentScale.Crop,
+                            if (profileState.imageUri == null) {
+                                profileState.user.imageUrl.let { imageUrl ->
+                                    if (imageUrl.isEmpty()) {
+                                        ImageCircle(
+                                            painter = painterResource(R.drawable.default_avatar),
+                                            modifier = Modifier.size(PHOTO_SIZE)
+                                        )
+                                    } else {
+                                        ImageCircle(
+                                            imageUrl = imageUrl,
+                                            modifier = Modifier.size(PHOTO_SIZE)
+                                        )
+                                    }
+                                }
+                            } else {
+                                ImageCircle(
+                                    painter = rememberAsyncImagePainter(profileState.imageUri),
+                                    modifier = Modifier.size(PHOTO_SIZE)
+                                )
+                            }
+                        }
+
+                        if (profileState.isShowingForm) {
+                            IconButton(
+                                onClick = { launcher.launch("image/*") },
                                 modifier = Modifier
-                                    .size(PHOTO_SIZE)
+                                    .size(32.dp)
                                     .clip(CircleShape)
-                                    .border(5.dp, MaterialTheme.colorScheme.tertiary, CircleShape),
+                                    .background(MaterialTheme.colorScheme.tertiary)
+                                    .align(Alignment.CenterEnd)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.CameraAlt,
+                                    contentDescription = "Camara",
+                                    tint = Color.White,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.size(8.dp))
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 32.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically, // Alinea los elementos verticalmente
+                        horizontalArrangement = Arrangement.SpaceBetween // Distribuye los elementos en la fila
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            HeadingTextComponent(
+                                value = profileState.user.names,
+                                textColor = MaterialTheme.colorScheme.onPrimary,
+                                fontSize = 16.sp
+                            )
+
+                            NormalTextComponent(
+                                value = profileState.user.email, fontSize = 14.sp
+                            )
+
+                            HeadingTextComponent(
+                                value = "${profileState.user.score} pts",
+                                textColor = MaterialTheme.colorScheme.primary,
+                                fontSize = 16.sp
                             )
                         }
 
-                        Spacer(modifier = Modifier.size(8.dp))
-
-                        NormalTextComponent(
-                            "¡Inicia sesión y juega en línea con tus amigos!", fontSize = 14.sp
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.size(18.dp))
-
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Bottom
-                ) {
-                    if (profileState.isShowingForm) {
-                        Spacer(modifier = Modifier.size(4.dp))
-
-                        Button(
-                            onClick = {
-                                onEvent(ProfileEvent.SaveForm)
-                                onEvent(ProfileEvent.ShowForm(false))
-                            },
-                            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
-                            modifier = Modifier.width(200.dp)
-                        ) {
-                            Text("Guardar")
+                        if (!profileState.isShowingForm) {
+                            IconButton(
+                                onClick = { onEvent(ProfileEvent.ShowForm(true)) },
+                                modifier = Modifier
+                                    .size(32.dp)
+                                    .clip(CircleShape)
+                                    .background(MaterialTheme.colorScheme.primary)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Edit,
+                                    contentDescription = "Edit",
+                                    tint = Color.White,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
+                        } else {
+                            IconButton(
+                                onClick = { onEvent(ProfileEvent.ShowForm(false)) },
+                                modifier = Modifier
+                                    .size(32.dp)
+                                    .clip(CircleShape)
+                                    .background(MaterialTheme.colorScheme.tertiary)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Close,
+                                    contentDescription = "Edit",
+                                    tint = Color.White,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
                         }
                     }
 
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    if (profileState.isShowingForm) {
+                        //Formulario
+                        FormTextField(
+                            value = profileState.user.names,
+                            label = "Nombres",
+                            icon = Icons.Default.Person,
+                            onValueChange = {
+                                onEvent(ProfileEvent.EnteredNames(it))
+                            })
+                    }
+                } else {
+                    //Default
+                    GlowingCard(
+                        modifier = Modifier
+                            .size(PHOTO_SIZE)
+                            .padding(5.dp),
+                        glowingColor = MaterialTheme.colorScheme.tertiary,
+                        containerColor = MaterialTheme.colorScheme.tertiary,
+                        cornerRadius = Int.MAX_VALUE.dp
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.default_avatar),
+                            contentDescription = "Logo",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(PHOTO_SIZE)
+                                .clip(CircleShape)
+                                .border(5.dp, MaterialTheme.colorScheme.tertiary, CircleShape),
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.size(8.dp))
+
+                    NormalTextComponent(
+                        "¡Inicia sesión y juega en línea con tus amigos!", fontSize = 14.sp
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.size(18.dp))
+
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Bottom
+            ) {
+                if (profileState.isShowingForm) {
                     Spacer(modifier = Modifier.size(4.dp))
 
-                    if (profileState.isAuthenticated) {
-                        GradientButton(
-                            text = "Cerrar Sesión",
-                            onClick = { onEvent(ProfileEvent.SignOut) },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    } else {
-                        GradientButton(
-                            text = "Iniciar Sesión",
-                            onClick = { onEvent(ProfileEvent.ToLogin) },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-
-                        Spacer(modifier = Modifier.size(4.dp))
-
-                        GradientButton(
-                            text = "Registrarse",
-                            onClick = { onEvent(ProfileEvent.ToSignUp) },
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                    Button(
+                        onClick = {
+                            onEvent(ProfileEvent.SaveForm)
+                            onEvent(ProfileEvent.ShowForm(false))
+                        },
+                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
+                        modifier = Modifier.width(200.dp)
+                    ) {
+                        Text("Guardar")
                     }
                 }
 
-                Spacer(modifier = Modifier.size(32.dp))
+                Spacer(modifier = Modifier.size(4.dp))
+
+                if (profileState.isAuthenticated) {
+                    GradientButton(
+                        text = "Cerrar Sesión",
+                        onClick = { onEvent(ProfileEvent.SignOut) },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                } else {
+                    GradientButton(
+                        text = "Iniciar Sesión",
+                        onClick = { onEvent(ProfileEvent.ToLogin) },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.size(4.dp))
+
+                    GradientButton(
+                        text = "Registrarse",
+                        onClick = { onEvent(ProfileEvent.ToSignUp) },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
+
+            Spacer(modifier = Modifier.size(32.dp))
         }
     }
 

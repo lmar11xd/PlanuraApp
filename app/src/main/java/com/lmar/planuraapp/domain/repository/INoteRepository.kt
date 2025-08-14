@@ -8,6 +8,7 @@ interface INoteRepository {
     suspend fun getNoteById(id: String): Note?
     suspend fun addNote(note: Note)
     suspend fun updateNote(note: Note)
+    suspend fun updateNoteFields(note: Note)
     suspend fun deleteNote(noteId: String)
     suspend fun syncOnce() // fuerza sincronización inmediata
 }

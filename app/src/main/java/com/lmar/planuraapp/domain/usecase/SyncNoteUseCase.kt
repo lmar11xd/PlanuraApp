@@ -2,15 +2,24 @@ package com.lmar.planuraapp.domain.usecase
 
 import com.lmar.planuraapp.domain.repository.INoteRepository
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SyncNoteUseCase(
     private val repository: INoteRepository,
-    private val scope: CoroutineScope
+    private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 ) {
-    operator fun invoke() {
+    operator fun invoke(
+        onSuccess: () -> Unit = {},
+        onError: (Exception) -> Unit = {}
+    ) {
         scope.launch {
-            repository.syncOnce()
+            try {
+                repository.syncOnce()
+                onSuccess()
+            } catch (e: Exception) {
+                onError(e)
+            }
         }
     }
 }

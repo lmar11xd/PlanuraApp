@@ -1,6 +1,7 @@
 package com.lmar.planuraapp.presentation.common.components
 
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -13,7 +14,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -26,11 +29,12 @@ fun AppBar(
     state: TopAppBarState = rememberTopAppBarState()
 ) {
     TopAppBar(
+        modifier = Modifier.padding(horizontal = 12.dp),
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color.Transparent,
             titleContentColor = MaterialTheme.colorScheme.primary
         ),
-        title = { Text(title, color = MaterialTheme.colorScheme.onSurface, fontSize = 18.sp) },
+        title = { Text(title, color = MaterialTheme.colorScheme.primary, fontSize = 18.sp) },
         navigationIcon = {
             if(withBackButton) {
                 IconButton(
@@ -39,7 +43,7 @@ fun AppBar(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Volver",
-                        tint = MaterialTheme.colorScheme.onSurface
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
             }

@@ -18,9 +18,9 @@ sealed class UiEvent {
     object ToReminder : UiEvent()
 
     // Navegación para pantallas de edición
-    object ToNoteEditor : UiEvent()
-    object ToTaskEditor : UiEvent()
-    object ToReminderEditor : UiEvent()
+    data class ToNoteEditor(val noteId: String) : UiEvent()
+    data class ToTaskEditor(val taskId: String) : UiEvent()
+    data class ToReminderEditor(val reminderId: String) : UiEvent()
 
     // Navegación entre pantallas
     object ToHome : UiEvent()

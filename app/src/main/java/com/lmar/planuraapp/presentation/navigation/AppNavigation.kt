@@ -1,12 +1,7 @@
 package com.lmar.planuraapp.presentation.navigation
 
 import android.annotation.SuppressLint
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -18,11 +13,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.lmar.planuraapp.presentation.common.components.AppBar
+import androidx.navigation.navArgument
+import com.lmar.planuraapp.core.utils.Constants.PARAM_NOTEID
+import com.lmar.planuraapp.core.utils.Constants.PARAM_REMINDERID
+import com.lmar.planuraapp.core.utils.Constants.PARAM_TASKID
 import com.lmar.planuraapp.presentation.common.components.Snackbar
 import com.lmar.planuraapp.presentation.common.components.SnackbarManager
 import com.lmar.planuraapp.presentation.common.components.SnackbarType
@@ -31,7 +30,6 @@ import com.lmar.planuraapp.presentation.common.ui.auth.LoginScreenContainer
 import com.lmar.planuraapp.presentation.common.ui.auth.ProfileScreenContainer
 import com.lmar.planuraapp.presentation.common.ui.auth.ResetPasswordScreenContainer
 import com.lmar.planuraapp.presentation.common.ui.auth.SignUpScreenContainer
-import com.lmar.planuraapp.presentation.ui.screen.HomeScreenContainer
 import com.lmar.planuraapp.presentation.ui.screen.NoteEditorScreenContainer
 import com.lmar.planuraapp.presentation.ui.screen.NotesScreenContainer
 import com.lmar.planuraapp.presentation.ui.screen.ReminderEditorScreenContainer
@@ -70,25 +68,6 @@ fun AppNavigation() {
     val isMainScreen = currentRoute in AppRoutes.bottomDestinations.map { it.route.route }
 
     Scaffold(
-        topBar = {
-            if (isMainScreen) {
-                AppBar(
-                    withBackButton = false,
-                    actions = {
-                        IconButton(
-                            onClick = { },
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.AccountCircle,
-                                contentDescription = "Profile",
-                                tint = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
-                    }
-                )
-
-            }
-        },
         bottomBar = {
             if (isMainScreen) {
                 BottomBar(
@@ -124,10 +103,6 @@ fun AppNavigation() {
                 ResetPasswordScreenContainer(navController)
             }
 
-            composable(AppRoutes.HomeScreen.route) {
-                HomeScreenContainer(navController)
-            }
-
             composable(AppRoutes.NoteScreen.route) {
                 NotesScreenContainer(navController)
             }
@@ -142,15 +117,36 @@ fun AppNavigation() {
 
             // Editores
 
-            composable(AppRoutes.NoteEditor.route) {
+            composable(
+                AppRoutes.NoteEditor.withArgs(PARAM_NOTEID),
+                arguments = listOf(
+                    navArgument(PARAM_NOTEID) {
+                        type = NavType.StringType
+                        defaultValue = "0"
+                    }
+                )
+            ) {
                 NoteEditorScreenContainer(navController)
             }
 
-            composable(AppRoutes.TaskEditor.route) {
+            composable(
+                AppRoutes.TaskEditor.withArgs(PARAM_TASKID), arguments = listOf(
+                    navArgument(PARAM_TASKID) {
+                        type = NavType.StringType
+                        defaultValue = "0"
+                    }
+                )) {
                 TaskEditorScreenContainer(navController)
             }
 
-            composable(AppRoutes.ReminderEditor.route) {
+            composable(
+                AppRoutes.ReminderEditor.withArgs(PARAM_REMINDERID),
+                arguments = listOf(
+                    navArgument(PARAM_REMINDERID) {
+                        type = NavType.StringType
+                        defaultValue = "0"
+                    }
+                )) {
                 ReminderEditorScreenContainer(navController)
             }
 
@@ -185,9 +181,26 @@ fun NavController.handleUiEvents(
                 UiEvent.ToTask -> navigate(AppRoutes.TaskScreen.route)
                 UiEvent.ToReminder -> navigate(AppRoutes.ReminderScreen.route)
 
-                UiEvent.ToNoteEditor -> navigate(AppRoutes.NoteEditor.route)
-                UiEvent.ToTaskEditor -> navigate(AppRoutes.TaskEditor.route)
-                UiEvent.ToReminderEditor -> navigate(AppRoutes.ReminderEditor.route)
+                is UiEvent.ToNoteEditor -> navigate(
+                    AppRoutes.NoteEditor.withParam(
+                        PARAM_NOTEID,
+                        event.noteId
+                    )
+                )
+
+                is UiEvent.ToTaskEditor -> navigate(
+                    AppRoutes.TaskEditor.withParam(
+                        PARAM_TASKID,
+                        event.taskId
+                    )
+                )
+
+                is UiEvent.ToReminderEditor -> navigate(
+                    AppRoutes.ReminderEditor.withParam(
+                        PARAM_REMINDERID,
+                        event.reminderId
+                    )
+                )
 
                 is UiEvent.ToRoute -> navigate(event.route)
             }

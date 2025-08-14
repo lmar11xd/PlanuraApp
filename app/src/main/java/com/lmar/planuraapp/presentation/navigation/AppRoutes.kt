@@ -1,6 +1,7 @@
 package com.lmar.planuraapp.presentation.navigation
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.Description
 import androidx.compose.material.icons.rounded.Notifications
@@ -30,7 +31,8 @@ sealed class AppRoutes(val route: String, val label: String) {
         val bottomDestinations = listOf(
             BottomItem(NoteScreen, Icons.Rounded.Description),
             BottomItem(TaskScreen, Icons.Rounded.CheckCircle),
-            BottomItem(ReminderScreen, Icons.Rounded.Notifications)
+            BottomItem(ReminderScreen, Icons.Rounded.Notifications),
+            BottomItem(ProfileScreen, Icons.Rounded.AccountCircle),
         )
     }
 

@@ -1,7 +1,7 @@
-package com.lmar.planuraapp.data.remote.dto
+package com.lmar.planuraapp.data.remote.service
 
 import com.google.firebase.database.DatabaseReference
-import com.lmar.planuraapp.data.remote.service.NoteDto
+import com.lmar.planuraapp.data.remote.dto.NoteDto
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
