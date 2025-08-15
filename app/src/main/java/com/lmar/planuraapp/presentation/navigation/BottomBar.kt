@@ -20,7 +20,7 @@ fun BottomBar(
     reminderCount: Int
 ) {
     NavigationBar(
-        containerColor = MaterialTheme.colorScheme.onPrimary
+        containerColor = MaterialTheme.colorScheme.background
     ) {
         val currentDestination = navController
             .currentBackStackEntryAsState().value?.destination
