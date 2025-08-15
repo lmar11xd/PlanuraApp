@@ -25,4 +25,21 @@ object Constants {
     const val PARAM_NOTEID = "noteId";
     const val PARAM_TASKID = "taskId";
     const val PARAM_REMINDERID = "reminderId";
+
+    // Months
+    val MONTHS_NAME = listOf(
+        "Enero",
+        "Febrero",
+        "Marzo",
+        "Abril",
+        "Mayo",
+        "Junio",
+        "Julio",
+        "Agosto",
+        "Septiembre",
+        "Octubre",
+        "Noviembre",
+        "Diciembre"
+    )
+
 }

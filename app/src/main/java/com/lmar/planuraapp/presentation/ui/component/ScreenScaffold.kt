@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,8 +21,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lmar.planuraapp.core.ui.theme.PlanuraAppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,7 +64,7 @@ fun ScreenScaffold(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(vertical = 8.dp)
-                    .background(MaterialTheme.colorScheme.onPrimary)
+                    .background(MaterialTheme.colorScheme.background)
             ) {
                 content()
             }
@@ -73,7 +73,7 @@ fun ScreenScaffold(
                 FloatingActionButton(
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
-                        .padding(end = 8.dp, bottom = 24.dp),
+                        .padding(end = 24.dp, bottom = 24.dp),
                     onClick = onFABClick,
                     containerColor = MaterialTheme.colorScheme.primary
                 ) {
@@ -82,6 +82,36 @@ fun ScreenScaffold(
                         contentDescription = "New Note"
                     )
                 }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ScreenScaffoldPreview() {
+    PlanuraAppTheme {
+        ScreenScaffold(
+            title = "Notes",
+            withFAB = true,
+            onFABClick = {},
+            actions = {
+                Icon(
+                    Icons.Default.Add,
+                    contentDescription = "New Note"
+                )
+            }
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 12.dp, vertical = 4.dp)
+                    .background(MaterialTheme.colorScheme.inversePrimary)
+            ) {
+                Text(
+                    "This is the content of the screen",
+                    modifier = Modifier.align(Alignment.Center)
+                )
             }
         }
     }

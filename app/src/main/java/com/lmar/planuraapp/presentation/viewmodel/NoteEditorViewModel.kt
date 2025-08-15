@@ -1,5 +1,6 @@
 package com.lmar.planuraapp.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -35,8 +36,6 @@ class NoteEditorViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    var noteId = ""
-
     init {
         // Si noteId es proporcionado, cargar la nota existente
         savedStateHandle.get<String>(PARAM_NOTEID)?.let { id ->
@@ -47,15 +46,15 @@ class NoteEditorViewModel @Inject constructor(
     fun onEvent(event: NoteEditorEvent) {
         when (event) {
             is NoteEditorEvent.SetColor -> {
-                _state.value = _state.value.copy(noteColor = event.color)
+                _state.value = _state.value.copy(noteColor = event.color, isNoteModified = true)
             }
 
             is NoteEditorEvent.SetContent -> {
-                _state.value = _state.value.copy(noteContent = event.content)
+                _state.value = _state.value.copy(noteContent = event.content, isNoteModified = true)
             }
 
             is NoteEditorEvent.SetTitle -> {
-                _state.value = _state.value.copy(noteTitle = event.title)
+                _state.value = _state.value.copy(noteTitle = event.title, isNoteModified = true)
             }
 
             is NoteEditorEvent.ShowMessage -> {
@@ -71,7 +70,9 @@ class NoteEditorViewModel @Inject constructor(
             }
 
             NoteEditorEvent.ShowColorPicker -> {
-
+                _state.value = _state.value.copy(
+                    isColorPickerVisible = !_state.value.isColorPickerVisible
+                )
             }
 
             NoteEditorEvent.ToBack -> {
@@ -83,12 +84,11 @@ class NoteEditorViewModel @Inject constructor(
     }
 
     private fun loadNote(id: String) {
-        noteId = id
-
         viewModelScope.launch {
             val note = getNoteByIdUseCase(id) ?: return@launch
 
             _state.value = _state.value.copy(
+                noteId = note.id,
                 noteTitle = note.title ?: "",
                 noteContent = note.content ?: "",
                 noteColor = NoteColorEnum.valueOf(note.color),
@@ -98,12 +98,17 @@ class NoteEditorViewModel @Inject constructor(
     }
 
     private fun saveNote() {
-        if (_state.value.noteTitle.isEmpty() && _state.value.noteContent.isEmpty()) {
+        if (!_state.value.isNoteModified
+            || _state.value.noteTitle.isEmpty()
+            && _state.value.noteContent.isEmpty()
+        ) {
+            Log.d("NoteEditorViewModel", "No se guardará la nota porque no ha sido modificada.")
             onEvent(NoteEditorEvent.ToBack)
+            return
         }
 
         val timestamp = System.currentTimeMillis()
-        if (noteId == "0") {
+        if (_state.value.noteId == "0") {
             val note = Note(
                 id = generateUniqueId(),
                 title = _state.value.noteTitle,
@@ -119,7 +124,7 @@ class NoteEditorViewModel @Inject constructor(
             )
         } else {
             val note = Note(
-                id = noteId,
+                id = _state.value.noteId,
                 title = _state.value.noteTitle,
                 content = _state.value.noteContent,
                 color = _state.value.noteColor.name,

@@ -10,10 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -25,9 +21,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.lmar.planuraapp.core.utils.formatTimestamp
+import com.lmar.planuraapp.core.utils.toFormattedDate
 import com.lmar.planuraapp.domain.enums.NoteColorEnum
 import com.lmar.planuraapp.domain.model.Note
 import com.lmar.planuraapp.presentation.common.components.Loading
@@ -66,23 +65,13 @@ private fun NotesScreen(
     ScreenScaffold(
         title = "Notas",
         withFAB = true,
-        actions = {
-            IconButton(
-                onClick = { },
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Add Note",
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            }
-        },
+        actions = { },
         onFABClick = { onEvent(NoteEvent.ToEditor("0")) }
     ) {
         LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Fixed(2), // 2 columnas
-            modifier = Modifier.padding(8.dp),
-            verticalItemSpacing = 8.dp,
+            modifier = Modifier.padding(horizontal = 16.dp),
+            verticalItemSpacing = 0.dp,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(noteState.notes) { note ->
@@ -108,12 +97,8 @@ fun NoteCard(note: Note, onTap: () -> Unit = {}) {
         shape = MaterialTheme.shapes.medium,
         shadowElevation = 2.dp,
         modifier = Modifier
-            /*.border(
-                width = 1.dp,
-                color = Color(noteColor.base),
-                shape = RoundedCornerShape(8.dp)
-            )*/
             .fillMaxWidth()
+            .padding(vertical = 4.dp)
             .clickable(onClick = onTap)
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
@@ -125,6 +110,13 @@ fun NoteCard(note: Note, onTap: () -> Unit = {}) {
             Text(
                 text = note.content ?: "",
                 style = MaterialTheme.typography.bodyMedium
+            )
+            Spacer(Modifier.height(4.dp))
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = formatTimestamp(note.updatedAt),
+                style = MaterialTheme.typography.bodySmall,
+                textAlign = TextAlign.End
             )
         }
     }
