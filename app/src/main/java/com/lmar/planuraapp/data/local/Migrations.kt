@@ -33,3 +33,35 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
         db.execSQL("ALTER TABLE notes_new RENAME TO notes")
     }
 }
+
+val MIGRATION_2_3 = object : Migration(2, 3) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        // Crear tabla de tasks
+        db.execSQL("""
+            CREATE TABLE IF NOT EXISTS `tasks` (
+                `id` TEXT NOT NULL,
+                `description` TEXT NOT NULL,
+                `isCompleted` INTEGER NOT NULL,
+                `createdAt` INTEGER NOT NULL,
+                `updatedAt` INTEGER NOT NULL,
+                `isDeleted` INTEGER NOT NULL DEFAULT 0,
+                `pendingSync` INTEGER NOT NULL DEFAULT 1,
+                PRIMARY KEY(`id`)
+            )
+        """)
+
+        // Crear tabla de reminders
+        db.execSQL("""
+            CREATE TABLE IF NOT EXISTS `reminders` (
+                `id` TEXT NOT NULL,
+                `description` TEXT NOT NULL,
+                `dueDate` INTEGER NOT NULL,
+                `reminderType` TEXT NOT NULL,
+                `createdAt` INTEGER NOT NULL,
+                `updatedAt` INTEGER NOT NULL,
+                `isDeleted` INTEGER NOT NULL DEFAULT 0,
+                PRIMARY KEY(`id`)
+            )
+        """)
+    }
+}

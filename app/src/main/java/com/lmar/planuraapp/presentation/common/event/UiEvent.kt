@@ -19,7 +19,6 @@ sealed class UiEvent {
 
     // Navegación para pantallas de edición
     data class ToNoteEditor(val noteId: String) : UiEvent()
-    data class ToTaskEditor(val taskId: String) : UiEvent()
     data class ToReminderEditor(val reminderId: String) : UiEvent()
 
     // Navegación entre pantallas

@@ -1,4 +1,4 @@
-package com.lmar.planuraapp.domain.usecase
+package com.lmar.planuraapp.domain.usecase.note
 
 import com.lmar.planuraapp.domain.model.Note
 import com.lmar.planuraapp.domain.repository.INoteRepository

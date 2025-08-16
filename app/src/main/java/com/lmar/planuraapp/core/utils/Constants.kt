@@ -22,9 +22,8 @@ object Constants {
     const val ERROR_MESSAGE_AUTH = "The supplied auth credential is incorrect, malformed or has expired."
     const val ERROR_MESSAGE_ACCOUNT_EXISTS = "The email address is already in use by another account."
 
-    const val PARAM_NOTEID = "noteId";
-    const val PARAM_TASKID = "taskId";
-    const val PARAM_REMINDERID = "reminderId";
+    const val PARAM_NOTEID = "noteId"
+    const val PARAM_REMINDERID = "reminderId"
 
     // Months
     val MONTHS_NAME = listOf(

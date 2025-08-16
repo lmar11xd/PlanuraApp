@@ -21,7 +21,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.lmar.planuraapp.core.utils.Constants.PARAM_NOTEID
 import com.lmar.planuraapp.core.utils.Constants.PARAM_REMINDERID
-import com.lmar.planuraapp.core.utils.Constants.PARAM_TASKID
 import com.lmar.planuraapp.presentation.common.components.Snackbar
 import com.lmar.planuraapp.presentation.common.components.SnackbarManager
 import com.lmar.planuraapp.presentation.common.components.SnackbarType
@@ -34,7 +33,6 @@ import com.lmar.planuraapp.presentation.ui.screen.NoteEditorScreenContainer
 import com.lmar.planuraapp.presentation.ui.screen.NotesScreenContainer
 import com.lmar.planuraapp.presentation.ui.screen.ReminderEditorScreenContainer
 import com.lmar.planuraapp.presentation.ui.screen.RemindersScreenContainer
-import com.lmar.planuraapp.presentation.ui.screen.TaskEditorScreenContainer
 import com.lmar.planuraapp.presentation.ui.screen.TasksScreenContainer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -130,16 +128,6 @@ fun AppNavigation() {
             }
 
             composable(
-                AppRoutes.TaskEditor.withArgs(PARAM_TASKID), arguments = listOf(
-                    navArgument(PARAM_TASKID) {
-                        type = NavType.StringType
-                        defaultValue = "0"
-                    }
-                )) {
-                TaskEditorScreenContainer(navController)
-            }
-
-            composable(
                 AppRoutes.ReminderEditor.withArgs(PARAM_REMINDERID),
                 arguments = listOf(
                     navArgument(PARAM_REMINDERID) {
@@ -185,13 +173,6 @@ fun NavController.handleUiEvents(
                     AppRoutes.NoteEditor.withParam(
                         PARAM_NOTEID,
                         event.noteId
-                    )
-                )
-
-                is UiEvent.ToTaskEditor -> navigate(
-                    AppRoutes.TaskEditor.withParam(
-                        PARAM_TASKID,
-                        event.taskId
                     )
                 )
 

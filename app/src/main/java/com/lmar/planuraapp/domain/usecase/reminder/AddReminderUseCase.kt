@@ -1,22 +1,23 @@
-package com.lmar.planuraapp.domain.usecase
+package com.lmar.planuraapp.domain.usecase.reminder
 
-import com.lmar.planuraapp.domain.repository.INoteRepository
+import com.lmar.planuraapp.domain.model.Reminder
+import com.lmar.planuraapp.domain.repository.IReminderRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class DeleteNoteUseCase (
-    private val repository: INoteRepository,
+class AddReminderUseCase(
+    private val repository: IReminderRepository,
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 ) {
     operator fun invoke(
-        noteId: String,
+        reminder: Reminder,
         onSuccess: () -> Unit = {},
         onError: (Exception) -> Unit = {}
     ) {
         scope.launch {
             try {
-                repository.deleteNote(noteId)
+                repository.addReminder(reminder)
                 onSuccess()
             } catch (e: Exception) {
                 onError(e)

@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.lmar.planuraapp.core.utils.formatTimestamp
-import com.lmar.planuraapp.core.utils.toFormattedDate
 import com.lmar.planuraapp.domain.enums.NoteColorEnum
 import com.lmar.planuraapp.domain.model.Note
 import com.lmar.planuraapp.presentation.common.components.Loading
@@ -65,7 +64,6 @@ private fun NotesScreen(
     ScreenScaffold(
         title = "Notas",
         withFAB = true,
-        actions = { },
         onFABClick = { onEvent(NoteEvent.ToEditor("0")) }
     ) {
         LazyVerticalStaggeredGrid(

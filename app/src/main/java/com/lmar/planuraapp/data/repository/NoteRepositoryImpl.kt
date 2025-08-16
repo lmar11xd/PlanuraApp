@@ -22,14 +22,14 @@ class NoteRepositoryImpl @Inject constructor(
     }
 
     init {
-        Log.d("NoteRepositoryImpl", "Inicializando NoteRepositoryImpl")
+        Log.d(TAG, "Inicializando NoteRepositoryImpl")
     }
 
     override fun getNotes(): Flow<List<Note>> {
         return noteDao.getNotes().map {
             notes -> notes.map { it.toDomain() }
-        }.catch {
-            Log.e(TAG, "Error al obtener las notas", it)
+        }.catch { e ->
+            Log.e(TAG, "Error al obtener las notas", e)
             emit(emptyList())
         }
     }

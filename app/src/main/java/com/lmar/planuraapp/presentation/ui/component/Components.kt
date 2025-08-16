@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lmar.planuraapp.core.ui.theme.PlanuraAppTheme
@@ -65,6 +66,8 @@ fun PlanuraTextField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     placeholder: String = "",
+    fontSize: Int = 16,
+    fontWeight: FontWeight = FontWeight.Bold,
     textColor: Color = MaterialTheme.colorScheme.onSurface,
     placeholderColor: Color = Color.Gray,
     singleLine: Boolean = true,
@@ -77,15 +80,15 @@ fun PlanuraTextField(
             Text(
                 text = placeholder,
                 color = placeholderColor,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                fontSize = fontSize.sp,
+                fontWeight = fontWeight
             )
         },
         singleLine = singleLine,
         textStyle = TextStyle(
             color = textColor,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold
+            fontSize = fontSize.sp,
+            fontWeight = fontWeight
         ),
         visualTransformation = visualTransformation,
         modifier = modifier

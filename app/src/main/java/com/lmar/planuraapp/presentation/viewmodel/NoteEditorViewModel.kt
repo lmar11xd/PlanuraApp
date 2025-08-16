@@ -8,9 +8,9 @@ import com.lmar.planuraapp.core.utils.Constants.PARAM_NOTEID
 import com.lmar.planuraapp.core.utils.generateUniqueId
 import com.lmar.planuraapp.domain.enums.NoteColorEnum
 import com.lmar.planuraapp.domain.model.Note
-import com.lmar.planuraapp.domain.usecase.AddNoteUseCase
-import com.lmar.planuraapp.domain.usecase.GetNoteByIdUseCase
-import com.lmar.planuraapp.domain.usecase.UpdateNoteUseCase
+import com.lmar.planuraapp.domain.usecase.note.AddNoteUseCase
+import com.lmar.planuraapp.domain.usecase.note.GetNoteByIdUseCase
+import com.lmar.planuraapp.domain.usecase.note.UpdateNoteUseCase
 import com.lmar.planuraapp.presentation.common.event.UiEvent
 import com.lmar.planuraapp.presentation.ui.event.NoteEditorEvent
 import com.lmar.planuraapp.presentation.ui.state.NoteEditorState

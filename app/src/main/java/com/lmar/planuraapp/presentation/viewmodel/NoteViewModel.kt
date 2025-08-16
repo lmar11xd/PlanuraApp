@@ -2,7 +2,7 @@ package com.lmar.planuraapp.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lmar.planuraapp.domain.usecase.GetNotesUseCase
+import com.lmar.planuraapp.domain.usecase.note.GetNotesUseCase
 import com.lmar.planuraapp.presentation.common.components.SnackbarEvent
 import com.lmar.planuraapp.presentation.common.components.SnackbarType
 import com.lmar.planuraapp.presentation.common.event.UiEvent
@@ -33,6 +33,26 @@ class NoteViewModel @Inject constructor(
         getNotes()
     }
 
+    fun onEvent(event: NoteEvent) {
+        when (event) {
+            is NoteEvent.ShowMessage -> {
+                viewModelScope.launch {
+                    _eventFlow.emit(
+                        UiEvent.ShowSnackbar(
+                            SnackbarEvent(event.message, event.type)
+                        )
+                    )
+                }
+            }
+
+            is NoteEvent.ToEditor -> {
+                viewModelScope.launch {
+                    _eventFlow.emit(UiEvent.ToNoteEditor(event.noteId))
+                }
+            }
+        }
+    }
+
     private fun getNotes() {
         viewModelScope.launch {
             getNotesUseCase()
@@ -53,26 +73,6 @@ class NoteViewModel @Inject constructor(
                 .collect { notes ->
                     _state.value = _state.value.copy(notes = notes, isLoading = false)
                 }
-        }
-    }
-
-    fun onEvent(event: NoteEvent) {
-        when (event) {
-            is NoteEvent.ShowMessage -> {
-                viewModelScope.launch {
-                    _eventFlow.emit(
-                        UiEvent.ShowSnackbar(
-                            SnackbarEvent(event.message, event.type)
-                        )
-                    )
-                }
-            }
-
-            is NoteEvent.ToEditor -> {
-                viewModelScope.launch {
-                    _eventFlow.emit(UiEvent.ToNoteEditor(event.noteId))
-                }
-            }
         }
     }
 }
