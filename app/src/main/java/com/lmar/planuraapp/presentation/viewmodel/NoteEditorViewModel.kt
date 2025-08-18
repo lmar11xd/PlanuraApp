@@ -6,9 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lmar.planuraapp.core.utils.Constants.PARAM_NOTEID
 import com.lmar.planuraapp.core.utils.generateUniqueId
-import com.lmar.planuraapp.domain.enums.NoteColorEnum
+import com.lmar.planuraapp.domain.enums.PlanuraColorEnum
 import com.lmar.planuraapp.domain.model.Note
 import com.lmar.planuraapp.domain.usecase.note.AddNoteUseCase
+import com.lmar.planuraapp.domain.usecase.note.DeleteLogicNoteUseCase
 import com.lmar.planuraapp.domain.usecase.note.GetNoteByIdUseCase
 import com.lmar.planuraapp.domain.usecase.note.UpdateNoteUseCase
 import com.lmar.planuraapp.presentation.common.event.UiEvent
@@ -27,6 +28,7 @@ class NoteEditorViewModel @Inject constructor(
     private val addNoteUseCase: AddNoteUseCase,
     private val updateNoteUseCase: UpdateNoteUseCase,
     private val getNoteByIdUseCase: GetNoteByIdUseCase,
+    private val deleteNoteUseCase: DeleteLogicNoteUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -58,11 +60,13 @@ class NoteEditorViewModel @Inject constructor(
             }
 
             is NoteEditorEvent.ShowMessage -> {
-
+                
             }
 
             NoteEditorEvent.DeleteNote -> {
-
+                _state.value = _state.value.copy(
+                    isNoteDeletedDialogVisible = true
+                )
             }
 
             NoteEditorEvent.SaveNote -> {
@@ -80,6 +84,16 @@ class NoteEditorViewModel @Inject constructor(
                     _eventFlow.emit(UiEvent.ToBack)
                 }
             }
+
+            NoteEditorEvent.ConfirmDeleteNote -> {
+                deleteNote()
+            }
+
+            NoteEditorEvent.HideNoteDeletedDialog -> {
+                _state.value = _state.value.copy(
+                    isNoteDeletedDialogVisible = false
+                )
+            }
         }
     }
 
@@ -91,7 +105,7 @@ class NoteEditorViewModel @Inject constructor(
                 noteId = note.id,
                 noteTitle = note.title ?: "",
                 noteContent = note.content ?: "",
-                noteColor = NoteColorEnum.valueOf(note.color),
+                noteColor = PlanuraColorEnum.valueOf(note.color),
                 noteLastModified = note.updatedAt
             )
         }
@@ -135,6 +149,18 @@ class NoteEditorViewModel @Inject constructor(
             updateNoteUseCase(
                 note,
                 onSuccess = { onEvent(NoteEditorEvent.ToBack) }
+            )
+        }
+    }
+
+    private fun deleteNote() {
+        viewModelScope.launch {
+            deleteNoteUseCase(
+                noteId = _state.value.noteId,
+                onSuccess = {
+                    onEvent(NoteEditorEvent.HideNoteDeletedDialog)
+                    onEvent(NoteEditorEvent.ToBack)
+                }
             )
         }
     }

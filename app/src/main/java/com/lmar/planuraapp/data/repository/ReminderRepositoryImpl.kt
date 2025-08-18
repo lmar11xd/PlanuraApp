@@ -86,4 +86,14 @@ class ReminderRepositoryImpl @Inject constructor(
             throw e
         }
     }
+
+    override suspend fun deleteLogicReminder(reminderId: String) {
+        try {
+            Log.d(TAG, "Eliminando lógicamente el recordatorio con ID: $reminderId")
+            reminderDao.deleteLogicReminder(reminderId)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error al eliminar lógicamente el recordatorio", e)
+            throw e
+        }
+    }
 }

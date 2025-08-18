@@ -10,4 +10,5 @@ interface IReminderRepository {
     suspend fun updateReminder(reminder: Reminder)
     suspend fun updateReminderFields(reminder: Reminder)
     suspend fun deleteReminder(reminderId: String)
+    suspend fun deleteLogicReminder(reminderId: String)
 }

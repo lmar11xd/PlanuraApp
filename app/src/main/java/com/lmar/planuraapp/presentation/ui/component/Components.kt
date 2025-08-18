@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -16,10 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lmar.planuraapp.core.ui.theme.PlanuraAppTheme
@@ -29,21 +30,27 @@ fun PlanuraTextArea(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    fontSize: Int = 16,
+    fontWeight: FontWeight = FontWeight.Normal,
     placeholder: String = "",
-    textColor: Color = Color.Black,
-    placeholderColor: Color = Color.Gray
+    textColor: Color = Color.DarkGray,
+    placeholderColor: Color = Color.Gray,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default
 ) {
     BasicTextField(
         value = value,
         onValueChange = onValueChange,
         textStyle = TextStyle(
             color = textColor,
-            fontSize = 16.sp
+            fontSize = fontSize.sp,
+            fontWeight = fontWeight
         ),
         singleLine = false,
-        keyboardOptions = KeyboardOptions(
+        keyboardOptions = keyboardOptions.copy(
             capitalization = KeyboardCapitalization.Sentences
         ),
+        keyboardActions = keyboardActions,
         modifier = modifier
             .fillMaxWidth()
             .heightIn(min = 100.dp) // altura mínima estilo textarea
@@ -52,7 +59,11 @@ fun PlanuraTextArea(
             if (value.isEmpty()) {
                 Text(
                     text = placeholder,
-                    style = TextStyle(color = placeholderColor, fontSize = 16.sp)
+                    style = TextStyle(
+                        color = placeholderColor,
+                        fontSize = fontSize.sp,
+                        fontWeight = fontWeight
+                    )
                 )
             }
             innerTextField()
@@ -68,10 +79,12 @@ fun PlanuraTextField(
     placeholder: String = "",
     fontSize: Int = 16,
     fontWeight: FontWeight = FontWeight.Bold,
-    textColor: Color = MaterialTheme.colorScheme.onSurface,
+    textColor: Color = Color.DarkGray,
     placeholderColor: Color = Color.Gray,
     singleLine: Boolean = true,
-    visualTransformation: VisualTransformation = VisualTransformation.None
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default
 ) {
     TextField(
         value = value,
@@ -90,6 +103,8 @@ fun PlanuraTextField(
             fontSize = fontSize.sp,
             fontWeight = fontWeight
         ),
+        keyboardOptions = keyboardOptions.copy(capitalization = KeyboardCapitalization.Sentences),
+        keyboardActions = keyboardActions,
         visualTransformation = visualTransformation,
         modifier = modifier
             .fillMaxWidth()
@@ -109,11 +124,13 @@ fun PlanuraTextField(
 private fun Components() {
     PlanuraAppTheme {
         Column(
-            modifier = Modifier.fillMaxSize().padding(16.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
             PlanuraTextField(
                 value = "",
-                onValueChange = {  },
+                onValueChange = { },
                 placeholder = "Título"
             )
 

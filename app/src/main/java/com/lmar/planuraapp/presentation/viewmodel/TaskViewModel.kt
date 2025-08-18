@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.lmar.planuraapp.core.utils.generateUniqueId
 import com.lmar.planuraapp.domain.model.Task
 import com.lmar.planuraapp.domain.usecase.task.AddTaskUseCase
+import com.lmar.planuraapp.domain.usecase.task.DeleteLogicTaskUseCase
 import com.lmar.planuraapp.domain.usecase.task.DeleteTaskUseCase
 import com.lmar.planuraapp.domain.usecase.task.GetTasksUseCase
 import com.lmar.planuraapp.domain.usecase.task.UpdateTaskCompletedUseCase
@@ -16,6 +17,7 @@ import com.lmar.planuraapp.presentation.common.event.UiEvent.*
 import com.lmar.planuraapp.presentation.ui.event.TaskEvent
 import com.lmar.planuraapp.presentation.ui.state.TaskState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,7 +32,7 @@ class TaskViewModel @Inject constructor(
     private val getTasksUseCase: GetTasksUseCase,
     private val addTaskUseCase: AddTaskUseCase,
     private val updateTaskUseCase: UpdateTaskUseCase,
-    private val deleteTaskUseCase: DeleteTaskUseCase,
+    private val deleteLogicTaskUseCase: DeleteLogicTaskUseCase,
     private val updateTaskCompletedUseCase: UpdateTaskCompletedUseCase
 ) : ViewModel() {
 
@@ -56,8 +58,11 @@ class TaskViewModel @Inject constructor(
                 }
             }
 
-            TaskEvent.DeleteTask -> {
-
+            is TaskEvent.DeleteTask -> {
+                _state.value = _state.value.copy(
+                    isTaskDeletedDialogVisible = true,
+                    currentTask = event.task
+                )
             }
 
             is TaskEvent.SaveTask -> {
@@ -94,6 +99,17 @@ class TaskViewModel @Inject constructor(
                 _state.value = _state.value.copy(
                     currentTask = null,
                     isTaskEditorVisible = false
+                )
+            }
+
+            TaskEvent.ConfirmDeleteTask -> {
+                deleteTask(_state.value.currentTask?.id ?: return)
+            }
+
+            TaskEvent.HideTaskDeletedDialog -> {
+                _state.value = _state.value.copy(
+                    currentTask = null,
+                    isTaskDeletedDialogVisible = false
                 )
             }
         }
@@ -152,4 +168,12 @@ class TaskViewModel @Inject constructor(
             updateTaskCompletedUseCase(taskId, isCompleted, timestamp)
         }
     }
+
+    private fun deleteTask(taskId: String) {
+        viewModelScope.launch {
+            deleteLogicTaskUseCase(taskId)
+            onEvent(TaskEvent.HideTaskDeletedDialog)
+        }
+    }
+
 }

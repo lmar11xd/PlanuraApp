@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TaskDao {
 
-    @Query("SELECT * FROM tasks ORDER BY updatedAt DESC")
+    @Query("SELECT * FROM tasks WHERE isDeleted = 0 ORDER BY updatedAt DESC")
     fun getTasks(): Flow<List<TaskEntity>>
 
     @Query("SELECT * FROM tasks WHERE id = :taskId LIMIT 1")
@@ -52,4 +52,6 @@ interface TaskDao {
     @Query("DELETE FROM tasks WHERE id = :taskId")
     suspend fun deleteTask(taskId: String)
 
+    @Query("UPDATE tasks SET isDeleted = 1 WHERE id = :taskId")
+    suspend fun deleteLogicTask(taskId: String)
 }

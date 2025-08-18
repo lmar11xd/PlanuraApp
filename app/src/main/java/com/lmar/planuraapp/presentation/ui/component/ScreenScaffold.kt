@@ -42,7 +42,7 @@ fun ScreenScaffold(
     ) {
         Row(
             modifier = Modifier
-                .padding(top = 48.dp, start = 16.dp, end = 16.dp)
+                .padding(top = 56.dp, start = 16.dp, end = 16.dp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
@@ -63,7 +63,7 @@ fun ScreenScaffold(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(vertical = 8.dp)
+                    .padding(top = 16.dp, bottom = 8.dp)
                     .background(MaterialTheme.colorScheme.background)
             ) {
                 content()

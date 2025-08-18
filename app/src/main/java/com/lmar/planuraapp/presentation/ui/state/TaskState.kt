@@ -9,6 +9,7 @@ data class TaskState (
     val isLoading: Boolean = false,
 
     val isTaskEditorVisible: Boolean = false,
+    val isTaskDeletedDialogVisible: Boolean = false,
     val currentTask: Task? = null,
     val isCurrentTaskModified: Boolean = false
 )

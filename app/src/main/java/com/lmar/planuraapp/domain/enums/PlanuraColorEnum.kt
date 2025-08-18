@@ -1,7 +1,7 @@
 package com.lmar.planuraapp.domain.enums
 
-enum class NoteColorEnum(val base: Long, val container: Long) {
-    DEFAULT(0xFF5D5D5D, 0xFFEDEDED),
+enum class PlanuraColorEnum(val base: Long, val container: Long) {
+    DEFAULT(0xFF8C8C8C, 0xFFECECEC),
     GREEN(0xFF4CAF50, 0xFFC8E6C9),
     RED(0xFFF44336, 0xFFFFCDD2),
     BLUE(0xFF2196F3, 0xFFBBDEFB),

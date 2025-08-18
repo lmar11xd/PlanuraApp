@@ -10,8 +10,11 @@ sealed class TaskEvent {
     data class SetCompleted(val taskId: String, val completed: Boolean): TaskEvent()
 
     object HideTaskEditor: TaskEvent()
+    object HideTaskDeletedDialog: TaskEvent()
+    object ConfirmDeleteTask: TaskEvent()
+
     object NewTask: TaskEvent()
     data class UpdateTask(val task: Task): TaskEvent()
-    object DeleteTask: TaskEvent()
+    data class DeleteTask(val task: Task): TaskEvent()
     object SaveTask: TaskEvent()
 }

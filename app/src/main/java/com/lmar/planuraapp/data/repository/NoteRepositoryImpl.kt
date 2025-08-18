@@ -92,6 +92,17 @@ class NoteRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun deleteLogicNote(noteId: String) {
+        try {
+            Log.d(TAG, "Eliminando lógicamente la nota con ID: $noteId")
+            noteDao.deleteLogicNote(noteId)
+            //firebaseService.deleteLogicNote(noteId)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error al eliminar lógicamente la nota", e)
+            throw e
+        }
+    }
+
     override suspend fun syncOnce() {
         try {
             Log.d(TAG, "Sincronizando una vez")

@@ -7,6 +7,8 @@ import com.lmar.planuraapp.data.remote.service.FirebaseNoteService
 import com.lmar.planuraapp.data.repository.NoteRepositoryImpl
 import com.lmar.planuraapp.domain.repository.INoteRepository
 import com.lmar.planuraapp.domain.usecase.note.AddNoteUseCase
+import com.lmar.planuraapp.domain.usecase.note.DeleteLogicNoteUseCase
+import com.lmar.planuraapp.domain.usecase.note.DeleteNoteUseCase
 import com.lmar.planuraapp.domain.usecase.note.GetNoteByIdUseCase
 import com.lmar.planuraapp.domain.usecase.note.GetNotesUseCase
 import com.lmar.planuraapp.domain.usecase.note.UpdateNoteUseCase
@@ -74,6 +76,22 @@ object NoteModule {
         repository: INoteRepository
     ): UpdateNoteUseCase {
         return UpdateNoteUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDeleteNoteUseCase(
+        repository: INoteRepository
+    ): DeleteNoteUseCase {
+        return DeleteNoteUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDeleteLogicNoteUseCase(
+        repository: INoteRepository
+    ): DeleteLogicNoteUseCase {
+        return DeleteLogicNoteUseCase(repository)
     }
 
 }

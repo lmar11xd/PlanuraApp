@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ReminderDao {
-    @Query("SELECT * FROM reminders")
+    @Query("SELECT * FROM reminders WHERE isDeleted = 0")
     fun getReminders(): Flow<List<ReminderEntity>>
 
     @Query("SELECT * FROM reminders WHERE id = :reminderId LIMIT 1")
@@ -43,5 +43,8 @@ interface ReminderDao {
 
     @Query("DELETE FROM reminders WHERE id = :reminderId")
     suspend fun deleteReminder(reminderId: String)
+
+    @Query("UPDATE reminders SET isDeleted = 1 WHERE id = :reminderId")
+    suspend fun deleteLogicReminder(reminderId: String)
 
 }

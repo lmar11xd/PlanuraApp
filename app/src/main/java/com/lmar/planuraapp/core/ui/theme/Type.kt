@@ -2,8 +2,10 @@ package com.lmar.planuraapp.core.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.googlefonts.Font
 import androidx.compose.ui.text.googlefonts.GoogleFont
+import androidx.compose.ui.unit.sp
 import com.lmar.planuraapp.R
 
 val provider = GoogleFont.Provider(
@@ -44,5 +46,11 @@ val AppTypography = Typography(
     bodySmall = baseline.bodySmall.copy(fontFamily = bodyFontFamily),
     labelLarge = baseline.labelLarge.copy(fontFamily = bodyFontFamily),
     labelMedium = baseline.labelMedium.copy(fontFamily = bodyFontFamily),
-    labelSmall = baseline.labelSmall.copy(fontFamily = bodyFontFamily),
+    labelSmall = baseline.labelSmall.copy(
+        fontFamily = bodyFontFamily,
+        fontStyle = FontStyle.Italic,
+        fontSize = 10.sp,
+        lineHeight = 10.sp,
+        letterSpacing = 0.5.sp
+    ),
 )

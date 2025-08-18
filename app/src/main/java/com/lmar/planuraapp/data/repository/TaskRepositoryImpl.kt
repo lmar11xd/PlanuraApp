@@ -99,4 +99,13 @@ class TaskRepositoryImpl @Inject constructor(
             throw e
         }
     }
+
+    override suspend fun deleteLogicTask(taskId: String) {
+        try {
+            Log.d(TAG, "Eliminando lógicamente la tarea con ID: $taskId")
+            taskDao.deleteLogicTask(taskId)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error al eliminar  lógicamente la tarea", e)
+        }
+    }
 }

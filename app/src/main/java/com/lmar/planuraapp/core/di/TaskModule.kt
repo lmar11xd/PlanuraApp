@@ -5,6 +5,7 @@ import com.lmar.planuraapp.data.local.dao.TaskDao
 import com.lmar.planuraapp.data.repository.TaskRepositoryImpl
 import com.lmar.planuraapp.domain.repository.ITaskRepository
 import com.lmar.planuraapp.domain.usecase.task.AddTaskUseCase
+import com.lmar.planuraapp.domain.usecase.task.DeleteLogicTaskUseCase
 import com.lmar.planuraapp.domain.usecase.task.DeleteTaskUseCase
 import com.lmar.planuraapp.domain.usecase.task.GetTaskByIdUseCase
 import com.lmar.planuraapp.domain.usecase.task.GetTasksUseCase
@@ -81,4 +82,13 @@ object TaskModule {
     ): DeleteTaskUseCase {
         return DeleteTaskUseCase(repository)
     }
+
+    @Provides
+    @Singleton
+    fun provideDeleteLogicTaskUseCase(
+        repository: ITaskRepository
+    ): DeleteLogicTaskUseCase {
+        return DeleteLogicTaskUseCase(repository)
+    }
+
 }

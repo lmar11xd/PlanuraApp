@@ -10,5 +10,6 @@ interface INoteRepository {
     suspend fun updateNote(note: Note)
     suspend fun updateNoteFields(note: Note)
     suspend fun deleteNote(noteId: String)
+    suspend fun deleteLogicNote(noteId: String)
     suspend fun syncOnce() // fuerza sincronización inmediata
 }

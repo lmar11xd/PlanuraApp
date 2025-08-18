@@ -5,6 +5,7 @@ import com.lmar.planuraapp.data.local.dao.ReminderDao
 import com.lmar.planuraapp.data.repository.ReminderRepositoryImpl
 import com.lmar.planuraapp.domain.repository.IReminderRepository
 import com.lmar.planuraapp.domain.usecase.reminder.AddReminderUseCase
+import com.lmar.planuraapp.domain.usecase.reminder.DeleteLogicReminderUseCase
 import com.lmar.planuraapp.domain.usecase.reminder.DeleteReminderUseCase
 import com.lmar.planuraapp.domain.usecase.reminder.GetReminderByIdUseCase
 import com.lmar.planuraapp.domain.usecase.reminder.GetRemindersUseCase
@@ -71,5 +72,13 @@ object ReminderModule {
         repository: IReminderRepository
     ): DeleteReminderUseCase {
         return DeleteReminderUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDeleteLogicReminderUseCase(
+        repository: IReminderRepository
+    ): DeleteLogicReminderUseCase {
+        return DeleteLogicReminderUseCase(repository)
     }
 }

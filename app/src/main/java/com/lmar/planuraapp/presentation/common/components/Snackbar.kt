@@ -25,28 +25,20 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 
-enum class SnackbarType {
-    SUCCESS, ERROR, INFO, WARN
+enum class SnackbarType(
+    val color: Color,
+    val icon: ImageVector
+) {
+    SUCCESS(Color(0xFF4CAF50), Icons.Default.CheckCircle),
+    ERROR(Color(0xFFF44336), Icons.Default.Error),
+    INFO(Color(0xFF2196F3), Icons.Default.Info),
+    WARN(Color(0xFFFFC107), Icons.Default.Warning)
 }
 
 data class SnackbarEvent(
     val message: String,
     val type: SnackbarType = SnackbarType.INFO
 )
-
-fun getSnackbarColor(type: SnackbarType): Color = when (type) {
-    SnackbarType.SUCCESS -> Color(0xFF4CAF50) // Verde
-    SnackbarType.ERROR -> Color(0xFFF44336)   // Rojo
-    SnackbarType.INFO -> Color(0xFF2196F3)    // Azul
-    SnackbarType.WARN -> Color(0xFFFFC107)    // Amarillo
-}
-
-fun getSnackbarIcon(type: SnackbarType): ImageVector = when (type) {
-    SnackbarType.SUCCESS -> Icons.Default.CheckCircle
-    SnackbarType.ERROR -> Icons.Default.Error
-    SnackbarType.INFO -> Icons.Default.Info
-    SnackbarType.WARN -> Icons.Default.Warning
-}
 
 object SnackbarManager {
     private val snackbarChannel = Channel<SnackbarEvent>()
@@ -59,12 +51,9 @@ object SnackbarManager {
 
 @Composable
 fun Snackbar(snackbarData: SnackbarData, type: SnackbarType) {
-    val backgroundColor = getSnackbarColor(type)
-    val icon = getSnackbarIcon(type)
-
     Surface(
         shape = RoundedCornerShape(8.dp),
-        color = backgroundColor,
+        color = type.color,
         shadowElevation = 6.dp,
         modifier = Modifier
             .padding(16.dp)
@@ -75,7 +64,7 @@ fun Snackbar(snackbarData: SnackbarData, type: SnackbarType) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = icon,
+                imageVector = type.icon,
                 contentDescription = null,
                 tint = Color.White,
                 modifier = Modifier.size(24.dp)

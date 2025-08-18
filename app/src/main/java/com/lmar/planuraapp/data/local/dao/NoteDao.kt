@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NoteDao {
-    @Query("SELECT * FROM notes ORDER BY updatedAt DESC")
+    @Query("SELECT * FROM notes WHERE isDeleted = 0 ORDER BY updatedAt DESC")
     fun getNotes(): Flow<List<NoteEntity>>
 
     @Query("SELECT * FROM notes WHERE id = :noteId LIMIT 1")
@@ -42,6 +42,9 @@ interface NoteDao {
 
     @Query("DELETE FROM notes WHERE id = :noteId")
     suspend fun deleteNote(noteId: String)
+
+    @Query("UPDATE notes SET isDeleted = 1 WHERE id = :noteId")
+    suspend fun deleteLogicNote(noteId: String)
 
     // Inserción de múltiples notas
     @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)

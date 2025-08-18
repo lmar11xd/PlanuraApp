@@ -1,35 +1,34 @@
 package com.lmar.planuraapp.presentation.ui.screen
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Description
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.lmar.planuraapp.core.utils.formatTimestamp
-import com.lmar.planuraapp.domain.enums.NoteColorEnum
+import com.lmar.planuraapp.core.ui.theme.PlanuraAppTheme
 import com.lmar.planuraapp.domain.model.Note
 import com.lmar.planuraapp.presentation.common.components.Loading
 import com.lmar.planuraapp.presentation.navigation.handleUiEvents
+import com.lmar.planuraapp.presentation.ui.component.NoteCard
 import com.lmar.planuraapp.presentation.ui.component.ScreenScaffold
 import com.lmar.planuraapp.presentation.ui.event.NoteEvent
 import com.lmar.planuraapp.presentation.ui.state.NoteState
@@ -66,17 +65,39 @@ private fun NotesScreen(
         withFAB = true,
         onFABClick = { onEvent(NoteEvent.ToEditor("0")) }
     ) {
-        LazyVerticalStaggeredGrid(
-            columns = StaggeredGridCells.Fixed(2), // 2 columnas
-            modifier = Modifier.padding(horizontal = 16.dp),
-            verticalItemSpacing = 0.dp,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(noteState.notes) { note ->
-                NoteCard(
-                    note = note,
-                    onTap = { onEvent(NoteEvent.ToEditor(note.id)) }
+        if (noteState.notes.isEmpty()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Icon(
+                    Icons.Default.Description,
+                    contentDescription = "Sin Notas",
+                    tint = Color.Gray,
                 )
+
+                Text(
+                    "No hay notas",
+                    color = Color.Gray,
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
+        } else {
+            LazyVerticalStaggeredGrid(
+                columns = StaggeredGridCells.Fixed(2), // 2 columnas
+                modifier = Modifier.padding(horizontal = 16.dp),
+                verticalItemSpacing = 0.dp,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(noteState.notes) { note ->
+                    NoteCard(
+                        note = note,
+                        onTap = { onEvent(NoteEvent.ToEditor(note.id)) }
+                    )
+                }
             }
         }
 
@@ -86,36 +107,31 @@ private fun NotesScreen(
     }
 }
 
+@Preview(showBackground = true)
 @Composable
-fun NoteCard(note: Note, onTap: () -> Unit = {}) {
-    val noteColor = NoteColorEnum.valueOf(note.color)
+private fun NotesScreenPreview() {
+    val notes = listOf(
+        Note("1", "Nota 1", "Contenido de la nota 1", "BLUE", 0, 0),
+        Note("2", "Nota 2", "Contenido de la nota 2", "RED", 0, 0),
+        Note("3", "Nota 3", "Contenido de la nota 3", "DEFAULT", 0, 0),
+        Note("4", "Nota 4", "Contenido de la nota 4", "DEFAULT", 0, 0),
+        Note("5", "Nota 5", "Contenido de la nota 5", "YELLOW", 0, 0),
+        Note("6", "Nota 6", "Contenido de la nota 6", "GREEN", 0, 0),
+    )
 
-    Surface(
-        color = Color(noteColor.container), // Amarillo claro
-        shape = MaterialTheme.shapes.medium,
-        shadowElevation = 2.dp,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp)
-            .clickable(onClick = onTap)
-    ) {
-        Column(modifier = Modifier.padding(12.dp)) {
-            Text(
-                text = note.title ?: "Sin título",
-                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
-            )
-            Spacer(Modifier.height(4.dp))
-            Text(
-                text = note.content ?: "",
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Spacer(Modifier.height(4.dp))
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = formatTimestamp(note.updatedAt),
-                style = MaterialTheme.typography.bodySmall,
-                textAlign = TextAlign.End
-            )
-        }
+    PlanuraAppTheme {
+        NotesScreen(
+            noteState = NoteState(notes = notes)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun NotesScreenEmptyPreview() {
+    PlanuraAppTheme {
+        NotesScreen(
+            noteState = NoteState(notes = emptyList())
+        )
     }
 }

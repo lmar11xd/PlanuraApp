@@ -24,15 +24,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.lmar.planuraapp.domain.enums.NoteColorEnum
+import com.lmar.planuraapp.domain.enums.PlanuraColorEnum
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ColorPickerBottomSheet(
     show: Boolean,
-    selectedColor: NoteColorEnum,
+    selectedColor: PlanuraColorEnum,
     onDismiss: () -> Unit,
-    onColorSelected: (NoteColorEnum) -> Unit
+    onColorSelected: (PlanuraColorEnum) -> Unit
 ) {
     if (show) {
         ModalBottomSheet(
@@ -65,8 +65,8 @@ fun ColorPickerBottomSheet(
 
 @Composable
 fun NoteColorPicker(
-    selectedColor: NoteColorEnum,
-    onColorSelected: (NoteColorEnum) -> Unit
+    selectedColor: PlanuraColorEnum,
+    onColorSelected: (PlanuraColorEnum) -> Unit
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -75,7 +75,7 @@ fun NoteColorPicker(
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        NoteColorEnum.entries.forEach { color ->
+        PlanuraColorEnum.entries.forEach { color ->
             val isSelected = color == selectedColor
             Box(
                 modifier = Modifier
