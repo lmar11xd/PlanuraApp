@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Close
@@ -41,6 +42,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -54,8 +56,8 @@ import com.lmar.planuraapp.domain.model.User
 import com.lmar.planuraapp.presentation.common.components.FormTextField
 import com.lmar.planuraapp.presentation.common.components.GlowingCard
 import com.lmar.planuraapp.presentation.common.components.GradientButton
+import com.lmar.planuraapp.presentation.common.components.GradientCircleImage
 import com.lmar.planuraapp.presentation.common.components.HeadingTextComponent
-import com.lmar.planuraapp.presentation.common.components.ImageCircle
 import com.lmar.planuraapp.presentation.common.components.Loading
 import com.lmar.planuraapp.presentation.common.components.NormalTextComponent
 import com.lmar.planuraapp.presentation.common.event.ProfileEvent
@@ -115,35 +117,29 @@ private fun ProfileScreen(
             ) {
                 if (profileState.isAuthenticated) {
                     //Información del Usuario
-                    Box(modifier = Modifier.size(PHOTO_SIZE)) {
-                        GlowingCard(
-                            modifier = Modifier
-                                .size(PHOTO_SIZE)
-                                .padding(5.dp),
-                            glowingColor = MaterialTheme.colorScheme.tertiary,
-                            containerColor = MaterialTheme.colorScheme.tertiary,
-                            cornerRadius = Int.MAX_VALUE.dp
-                        ) {
-                            if (profileState.imageUri == null) {
-                                profileState.user.imageUrl.let { imageUrl ->
-                                    if (imageUrl.isEmpty()) {
-                                        ImageCircle(
-                                            painter = painterResource(R.drawable.default_avatar),
-                                            modifier = Modifier.size(PHOTO_SIZE)
-                                        )
-                                    } else {
-                                        ImageCircle(
-                                            imageUrl = imageUrl,
-                                            modifier = Modifier.size(PHOTO_SIZE)
-                                        )
-                                    }
+                    Box {
+                        if (profileState.imageUri == null) {
+                            profileState.user.imageUrl.let { imageUrl ->
+                                if (imageUrl.isEmpty()) {
+                                    GradientCircleImage(
+                                        painter = painterResource(R.drawable.default_avatar),
+                                        imageSize = PHOTO_SIZE,
+                                        strokeWidth = 6.dp
+                                    )
+                                } else {
+                                    GradientCircleImage(
+                                        imageUrl = imageUrl,
+                                        imageSize = PHOTO_SIZE,
+                                        strokeWidth = 6.dp
+                                    )
                                 }
-                            } else {
-                                ImageCircle(
-                                    painter = rememberAsyncImagePainter(profileState.imageUri),
-                                    modifier = Modifier.size(PHOTO_SIZE)
-                                )
                             }
+                        } else {
+                            GradientCircleImage(
+                                painter = rememberAsyncImagePainter(profileState.imageUri),
+                                imageSize = PHOTO_SIZE,
+                                strokeWidth = 6.dp
+                            )
                         }
 
                         if (profileState.isShowingForm) {
@@ -177,18 +173,12 @@ private fun ProfileScreen(
                         Column(modifier = Modifier.weight(1f)) {
                             HeadingTextComponent(
                                 value = profileState.user.names,
-                                textColor = MaterialTheme.colorScheme.onPrimary,
+                                textColor = MaterialTheme.colorScheme.tertiary,
                                 fontSize = 16.sp
                             )
 
                             NormalTextComponent(
                                 value = profileState.user.email, fontSize = 14.sp
-                            )
-
-                            HeadingTextComponent(
-                                value = "${profileState.user.score} pts",
-                                textColor = MaterialTheme.colorScheme.primary,
-                                fontSize = 16.sp
                             )
                         }
 
@@ -235,7 +225,11 @@ private fun ProfileScreen(
                             icon = Icons.Default.Person,
                             onValueChange = {
                                 onEvent(ProfileEvent.EnteredNames(it))
-                            })
+                            },
+                            keyboardOptions = KeyboardOptions(
+                                imeAction = ImeAction.Done
+                            )
+                        )
                     }
                 } else {
                     //Default

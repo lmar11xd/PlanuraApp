@@ -1,6 +1,5 @@
 package com.lmar.planuraapp.presentation.common.ui.auth
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -11,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
@@ -22,20 +23,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.lmar.planuraapp.R
 import com.lmar.planuraapp.core.ui.theme.PlanuraAppTheme
 import com.lmar.planuraapp.presentation.common.components.AppBar
 import com.lmar.planuraapp.presentation.common.components.DividerTextComponent
@@ -79,19 +80,14 @@ private fun LoginScreen(
     authState: AuthState,
     onEvent: (AuthEvent) -> Unit = {}
 ) {
+    val focusRequesterEmail = remember { FocusRequester() }
+    val focusRequesterPassword = remember { FocusRequester() }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(MaterialTheme.colorScheme.onPrimary)
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.bg1),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxSize()
-        )
-
         Column {
             AppBar(
                 "Iniciar Sesión",
@@ -114,8 +110,8 @@ private fun LoginScreen(
                         fontFamily = MaterialTheme.typography.displayLarge.fontFamily!!,
                         fontSize = 32.sp,
                         textAlign = TextAlign.Start,
-                        textColor = MaterialTheme.colorScheme.onPrimary,
-                        shadowColor = MaterialTheme.colorScheme.primary
+                        textColor = MaterialTheme.colorScheme.primary,
+                        shadowColor = MaterialTheme.colorScheme.primaryContainer
                     )
 
                     NormalTextComponent(
@@ -133,7 +129,14 @@ private fun LoginScreen(
                     value = authState.email,
                     label = "Correo",
                     icon = Icons.Default.Email,
-                    onValueChange = { onEvent(AuthEvent.EnteredEmail(it)) }
+                    onValueChange = { onEvent(AuthEvent.EnteredEmail(it)) },
+                    modifier = Modifier.focusRequester(focusRequesterEmail),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = { focusRequesterPassword.requestFocus() }
+                    )
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -142,11 +145,15 @@ private fun LoginScreen(
                     value = authState.password,
                     label = "Contraseña",
                     icon = Icons.Default.Lock,
-                    onValueChange = { onEvent(AuthEvent.EnteredPassword(it)) }
+                    onValueChange = { onEvent(AuthEvent.EnteredPassword(it)) },
+                    modifier = Modifier.focusRequester(focusRequesterPassword),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done
+                    )
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
-                
+
                 GradientButton(
                     text = "Iniciar Sesión",
                     onClick = { onEvent(AuthEvent.Login) },
@@ -161,7 +168,7 @@ private fun LoginScreen(
                     modifier = Modifier.padding(10.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("¿No tienes una cuenta? ", color = MaterialTheme.colorScheme.onPrimary)
+                    Text("¿No tienes una cuenta? ", color = MaterialTheme.colorScheme.tertiary)
                     Text(
                         text = "Regístrate",
                         fontWeight = FontWeight.Bold,

@@ -1,6 +1,5 @@
 package com.lmar.planuraapp.presentation.common.ui.auth
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -11,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
@@ -23,14 +24,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -82,19 +84,16 @@ fun SignUpScreen(
     authState: AuthState = AuthState(),
     onEvent: (AuthEvent) -> Unit = {}
 ) {
+    val requesterFocusNames = remember { FocusRequester() }
+    val requesterFocusEmail = remember { FocusRequester() }
+    val requesterFocusPassword = remember { FocusRequester() }
+    val requesterFocusConfirmPassword = remember { FocusRequester() }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(MaterialTheme.colorScheme.onPrimary)
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.bg1),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxSize()
-        )
-
         Column {
             AppBar(
                 "Registrarse",
@@ -108,15 +107,15 @@ fun SignUpScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Column(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     ShadowText(
                         text = "Crear una Cuenta,",
                         fontFamily = MaterialTheme.typography.displayLarge.fontFamily!!,
                         fontSize = 32.sp,
                         textAlign = TextAlign.Start,
-                        textColor = MaterialTheme.colorScheme.onPrimary,
-                        shadowColor = MaterialTheme.colorScheme.primary
+                        textColor = MaterialTheme.colorScheme.primary,
+                        shadowColor = MaterialTheme.colorScheme.primaryContainer
                     )
 
                     NormalTextComponent(
@@ -135,7 +134,14 @@ fun SignUpScreen(
                     icon = Icons.Default.Person,
                     onValueChange = {
                         onEvent(AuthEvent.EnteredNames(it))
-                    }
+                    },
+                    modifier = Modifier.focusRequester(requesterFocusNames),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = { requesterFocusEmail.requestFocus() }
+                    )
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -146,7 +152,14 @@ fun SignUpScreen(
                     icon = Icons.Default.Email,
                     onValueChange = {
                         onEvent(AuthEvent.EnteredEmail(it))
-                    }
+                    },
+                    modifier = Modifier.focusRequester(requesterFocusEmail),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = { requesterFocusPassword.requestFocus() }
+                    )
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -157,22 +170,39 @@ fun SignUpScreen(
                     icon = Icons.Default.Lock,
                     onValueChange = {
                         onEvent(AuthEvent.EnteredPassword(it))
-                    }
+                    },
+                    modifier = Modifier.focusRequester(requesterFocusPassword),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = { requesterFocusConfirmPassword.requestFocus() }
+                    )
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 FormPasswordTextField(
                     value = authState.confirmPassword,
-                    label = "Contraseña",
+                    label = "Confirmar Contraseña",
                     icon = Icons.Default.Lock,
                     onValueChange = {
                         onEvent(AuthEvent.EnteredConfirmPassword(it))
-                    }
+                    },
+                    modifier = Modifier.focusRequester(requesterFocusConfirmPassword),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done
+                    )
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
-                FormCheckbox(text = stringResource(R.string.terms_and_conditions))
+                FormCheckbox(
+                    text = stringResource(R.string.terms_and_conditions),
+                    checked = authState.isTermsAccepted,
+                    onCheckedChange = {
+                        onEvent(AuthEvent.EnteredTermsAccepted(it))
+                    }
+                )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -190,7 +220,7 @@ fun SignUpScreen(
                     modifier = Modifier.padding(10.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("¿Ya tienes una cuenta? ", color = MaterialTheme.colorScheme.onPrimary)
+                    Text("¿Ya tienes una cuenta? ", color = MaterialTheme.colorScheme.tertiary)
                     Text(
                         text = "Login",
                         fontWeight = FontWeight.Bold,

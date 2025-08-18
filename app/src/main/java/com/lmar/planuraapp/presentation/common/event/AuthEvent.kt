@@ -6,6 +6,7 @@ sealed class AuthEvent {
     data class EnteredEmail(val value: String) : AuthEvent()
     data class EnteredPassword(val value: String) : AuthEvent()
     data class EnteredConfirmPassword(val value: String) : AuthEvent()
+    data class EnteredTermsAccepted(val value: Boolean) : AuthEvent()
     data class EnteredNames(val value: String) : AuthEvent()
     data class EnteredImageUrl(val value: String) : AuthEvent()
 

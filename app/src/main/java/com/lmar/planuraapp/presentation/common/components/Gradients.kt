@@ -27,11 +27,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.lmar.planuraapp.R
 import com.lmar.planuraapp.core.ui.theme.PlanuraAppTheme
 
@@ -48,7 +48,10 @@ fun GradientButton(
         border = BorderStroke(
             width = 4.dp,
             brush = Brush.linearGradient(
-                listOf(colorResource(R.color.pink_light), colorResource(R.color.green_light))
+                listOf(
+                    MaterialTheme.colorScheme.primary,
+                    MaterialTheme.colorScheme.primaryContainer
+                )
             )
         ),
         colors = ButtonDefaults.buttonColors(
@@ -62,7 +65,8 @@ fun GradientButton(
 
 @Composable
 fun GradientCircleImage(
-    image: Painter,
+    painter: Painter? = null,
+    imageUrl: String? = null,
     modifier: Modifier = Modifier,
     imageSize: Dp = 100.dp,
     strokeWidth: Dp = 4.dp,
@@ -76,31 +80,51 @@ fun GradientCircleImage(
             .background(
                 brush = Brush.linearGradient(
                     colors = listOf(
-                        colorResource(R.color.pink_light),
-                        colorResource(R.color.green_light)
+                        MaterialTheme.colorScheme.primary,
+                        MaterialTheme.colorScheme.primaryContainer
                     )
                 ),
                 shape = CircleShape
             ),
         contentAlignment = Alignment.Center
     ) {
-        Image(
-            painter = image,
-            contentDescription = "Avatar",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(imageSize)
-                .clip(CircleShape)
-                .graphicsLayer(
-                    scaleX = zoom,
-                    scaleY = zoom
-                )
-                .border(
-                    width = 0.dp,
-                    color = Color.Transparent,
-                    shape = CircleShape
-                )
-        )
+        if (imageUrl != null) {
+            AsyncImage(
+                model = imageUrl,
+                contentDescription = "Avatar",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(imageSize)
+                    .clip(CircleShape)
+                    .graphicsLayer(
+                        scaleX = zoom,
+                        scaleY = zoom
+                    )
+                    .border(
+                        width = 0.dp,
+                        color = Color.Transparent,
+                        shape = CircleShape
+                    )
+            )
+        } else if (painter != null) {
+            Image(
+                painter = painter,
+                contentDescription = "Avatar",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(imageSize)
+                    .clip(CircleShape)
+                    .graphicsLayer(
+                        scaleX = zoom,
+                        scaleY = zoom
+                    )
+                    .border(
+                        width = 0.dp,
+                        color = Color.Transparent,
+                        shape = CircleShape
+                    )
+            )
+        }
     }
 }
 
@@ -116,8 +140,8 @@ fun GradientCard(
                 width = 2.dp,
                 brush = Brush.linearGradient(
                     colors = listOf(
-                        colorResource(R.color.pink_light),
-                        colorResource(R.color.green_light)
+                        MaterialTheme.colorScheme.primary,
+                        MaterialTheme.colorScheme.primaryContainer
                     )
                 ),
                 shape = RoundedCornerShape(cardRadius)
@@ -139,7 +163,7 @@ private fun GradientsPreview() {
                 .padding(16.dp)
         ) {
             GradientCircleImage(
-                image = painterResource(id = R.drawable.default_avatar),
+                painter = painterResource(id = R.drawable.default_avatar),
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 imageSize = 96.dp,
                 strokeWidth = 6.dp

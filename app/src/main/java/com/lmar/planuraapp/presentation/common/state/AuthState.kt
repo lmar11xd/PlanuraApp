@@ -7,6 +7,7 @@ data class AuthState(
     val email: String = "",
     val password: String = "",
     val confirmPassword: String = "",
+    val isTermsAccepted: Boolean = false,
     val names: String = "",
     val imageUrl: String = "",
     val isLoading: Boolean = false,

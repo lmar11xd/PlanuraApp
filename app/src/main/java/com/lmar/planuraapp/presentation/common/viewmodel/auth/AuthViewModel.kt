@@ -72,6 +72,12 @@ class AuthViewModel @Inject constructor(
                 )
             }
 
+            is AuthEvent.EnteredTermsAccepted -> {
+                _authState.value = _authState.value.copy(
+                    isTermsAccepted = event.value
+                )
+            }
+
             AuthEvent.Login -> {
                 login()
             }
@@ -194,6 +200,7 @@ class AuthViewModel @Inject constructor(
         val email = _authState.value.email
         val password = _authState.value.password
         val confirmPassword = _authState.value.confirmPassword
+        val isTermsAccepted = _authState.value.isTermsAccepted
 
         if (names.isBlank()) {
             onEvent(AuthEvent.ShowMessage("¡Nombres no pueden ser vacíos!", SnackbarType.WARN))
@@ -228,6 +235,11 @@ class AuthViewModel @Inject constructor(
         if (confirmPassword.isBlank() || password != confirmPassword
         ) {
             onEvent(AuthEvent.ShowMessage("¡Las contraseñas no coinciden!", SnackbarType.WARN))
+            return
+        }
+
+        if (!isTermsAccepted) {
+            onEvent(AuthEvent.ShowMessage("¡Debe aceptar los términos y condiciones!", SnackbarType.WARN))
             return
         }
 
