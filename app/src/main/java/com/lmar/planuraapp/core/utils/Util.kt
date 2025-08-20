@@ -13,6 +13,8 @@ import java.util.Locale
 import java.util.UUID
 import kotlin.random.Random
 
+val locale: Locale = Locale.forLanguageTag("es-ES")
+
 fun generateUniqueCode(): String {
     val timestamp =
         System.currentTimeMillis().toString().takeLast(3) // Últimos 3 dígitos del tiempo
@@ -22,6 +24,20 @@ fun generateUniqueCode(): String {
 
 fun generateUniqueId(): String {
     return UUID.randomUUID().toString()
+}
+
+fun getTimeFormatted(hour: Int, minute: Int): String {
+    val calendar = Calendar.getInstance().apply {
+        set(Calendar.HOUR_OF_DAY, hour)
+        set(Calendar.MINUTE, minute)
+    }
+    val formatter = SimpleDateFormat("hh:mm a", locale)
+    return formatter.format(calendar.time)
+}
+
+fun Long.toFormatted(): String {
+    val sdf = SimpleDateFormat("dd/MM/yyyy", locale)
+    return sdf.format(Date(this))
 }
 
 fun Long.toFormattedDate(): String {
@@ -63,7 +79,6 @@ fun Long.toFormattedDate(): String {
 }
 
 fun formatTimestamp(timestamp: Long): String {
-    val localeEs = Locale.forLanguageTag("es-ES")
     val zone = ZoneId.systemDefault()
 
     val ahora = ZonedDateTime.now(zone)
@@ -72,11 +87,11 @@ fun formatTimestamp(timestamp: Long): String {
     val hoy = ahora.toLocalDate()
     val dia = fecha.toLocalDate()
 
-    val weekFields = WeekFields.of(localeEs)
+    val weekFields = WeekFields.of(locale)
     val inicioSemana = hoy.with(weekFields.dayOfWeek(), 1) // lunes
     val mismaSemana = !dia.isBefore(inicioSemana) && !dia.isAfter(hoy)
 
-    val horaAmPm = fecha.format(DateTimeFormatter.ofPattern("h:mm a", localeEs))
+    val horaAmPm = fecha.format(DateTimeFormatter.ofPattern("h:mm a", locale))
         .toUpperAmPm()
 
     return when {
@@ -88,21 +103,21 @@ fun formatTimestamp(timestamp: Long): String {
 
         // Misma semana (excluyendo hoy/ayer por casos anteriores)
         mismaSemana -> {
-            val dow = dia.dayOfWeek.getDisplayName(TextStyle.SHORT, localeEs)
+            val dow = dia.dayOfWeek.getDisplayName(TextStyle.SHORT, locale)
                 .removeSuffix(".")
-                .capitalizeFirst(localeEs)
+                .capitalizeFirst(locale)
             "$dow $horaAmPm"
         }
 
         // Mismo año
         dia.year == hoy.year -> {
-            val mes = dia.month.getDisplayName(TextStyle.FULL, localeEs).capitalizeFirst(localeEs)
+            val mes = dia.month.getDisplayName(TextStyle.FULL, locale).capitalizeFirst(locale)
             "${dia.dayOfMonth} de $mes"
         }
 
         // Otro año
         else -> {
-            val mes = dia.month.getDisplayName(TextStyle.FULL, localeEs).capitalizeFirst(localeEs)
+            val mes = dia.month.getDisplayName(TextStyle.FULL, locale).capitalizeFirst(locale)
             "${dia.dayOfMonth} de $mes de ${dia.year}"
         }
     }

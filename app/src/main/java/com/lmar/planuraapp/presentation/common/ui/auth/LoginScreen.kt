@@ -118,7 +118,6 @@ private fun LoginScreen(
                         "¡Inicia sesión para continuar!",
                         textAlign = TextAlign.Start,
                         textColor = MaterialTheme.colorScheme.tertiary,
-                        fontSize = 16.sp,
                         modifier = Modifier.padding(horizontal = 5.dp)
                     )
                 }

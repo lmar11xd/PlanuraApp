@@ -3,9 +3,7 @@ package com.lmar.planuraapp.presentation.common.ui.auth
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,12 +38,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
@@ -54,7 +50,6 @@ import com.lmar.planuraapp.core.ui.theme.PlanuraAppTheme
 import com.lmar.planuraapp.core.utils.Constants.PHOTO_SIZE
 import com.lmar.planuraapp.domain.model.User
 import com.lmar.planuraapp.presentation.common.components.FormTextField
-import com.lmar.planuraapp.presentation.common.components.GlowingCard
 import com.lmar.planuraapp.presentation.common.components.GradientButton
 import com.lmar.planuraapp.presentation.common.components.GradientCircleImage
 import com.lmar.planuraapp.presentation.common.components.HeadingTextComponent
@@ -173,13 +168,10 @@ private fun ProfileScreen(
                         Column(modifier = Modifier.weight(1f)) {
                             HeadingTextComponent(
                                 value = profileState.user.names,
-                                textColor = MaterialTheme.colorScheme.tertiary,
-                                fontSize = 16.sp
+                                textColor = MaterialTheme.colorScheme.tertiary
                             )
 
-                            NormalTextComponent(
-                                value = profileState.user.email, fontSize = 14.sp
-                            )
+                            NormalTextComponent(value = profileState.user.email)
                         }
 
                         if (!profileState.isShowingForm) {
@@ -233,30 +225,15 @@ private fun ProfileScreen(
                     }
                 } else {
                     //Default
-                    GlowingCard(
-                        modifier = Modifier
-                            .size(PHOTO_SIZE)
-                            .padding(5.dp),
-                        glowingColor = MaterialTheme.colorScheme.tertiary,
-                        containerColor = MaterialTheme.colorScheme.tertiary,
-                        cornerRadius = Int.MAX_VALUE.dp
-                    ) {
-                        Image(
-                            painter = painterResource(R.drawable.default_avatar),
-                            contentDescription = "Logo",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .size(PHOTO_SIZE)
-                                .clip(CircleShape)
-                                .border(5.dp, MaterialTheme.colorScheme.tertiary, CircleShape),
-                        )
-                    }
+                    GradientCircleImage(
+                        painter = painterResource(R.drawable.default_avatar),
+                        imageSize = PHOTO_SIZE,
+                        strokeWidth = 6.dp
+                    )
 
                     Spacer(modifier = Modifier.size(8.dp))
 
-                    NormalTextComponent(
-                        "¡Inicia sesión y juega en línea con tus amigos!", fontSize = 14.sp
-                    )
+                    NormalTextComponent("¡Inicia sesión y juega en línea con tus amigos!")
                 }
             }
 
@@ -329,5 +306,13 @@ private fun ProfileScreenPreview() {
                 user = User(id = "01", names = "Test 01", email = "test01@gmail.com", score = 100)
             )
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ProfileScreenNotAuthenticatedPreview() {
+    PlanuraAppTheme {
+        ProfileScreen()
     }
 }

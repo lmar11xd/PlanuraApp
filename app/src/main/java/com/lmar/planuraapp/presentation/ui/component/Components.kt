@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,8 +52,8 @@ fun PlanuraTextArea(
         keyboardActions = keyboardActions,
         modifier = modifier
             .fillMaxWidth()
-            .heightIn(min = 100.dp) // altura mínima estilo textarea
-            .padding(16.dp),
+            .heightIn(min = 100.dp)
+            .padding(16.dp), // Altura mínima
         decorationBox = { innerTextField ->
             if (value.isEmpty()) {
                 Text(
@@ -106,9 +105,7 @@ fun PlanuraTextField(
         keyboardOptions = keyboardOptions.copy(capitalization = KeyboardCapitalization.Sentences),
         keyboardActions = keyboardActions,
         visualTransformation = visualTransformation,
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 0.dp),
+        modifier = modifier.fillMaxWidth(),
         colors = TextFieldDefaults.colors(
             focusedContainerColor = Color.Transparent,
             unfocusedContainerColor = Color.Transparent,

@@ -116,7 +116,8 @@ private fun NoteEditorScreen(
             )
 
             Column(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
             ) {
                 PlanuraTextField(
                     value = noteEditorState.noteTitle,
@@ -172,5 +173,13 @@ fun NoteEditorScreenPreview() {
 
     PlanuraAppTheme {
         NoteEditorScreen(noteEditorState)
+    }
+}
+
+@Preview
+@Composable
+fun NoteEditorScreenDefaultPreview() {
+    PlanuraAppTheme {
+        NoteEditorScreen()
     }
 }

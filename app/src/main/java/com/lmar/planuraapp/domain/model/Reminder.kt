@@ -11,6 +11,13 @@ data class Reminder (
     val isDeleted: Boolean = false
 )
 
-enum class ReminderType {
-    ONE_TIME, DAILY, WORKING_DAY, WEEKLY, MONTHLY, YEARLY
+enum class ReminderType(
+    val label: String
+) {
+    ONE_TIME("Una Vez"),
+    DAILY("Diariamente"),
+    WORKING_DAY("Días Laborales"),
+    WEEKLY("Semanalmente"),
+    MONTHLY("Mensualmente"),
+    YEARLY("Anualmente")
 }

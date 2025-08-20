@@ -108,7 +108,6 @@ fun ResetPasswordScreen(
                         "Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña",
                         textAlign = TextAlign.Start,
                         textColor = MaterialTheme.colorScheme.tertiary,
-                        fontSize = 16.sp,
                         modifier = Modifier.padding(horizontal = 5.dp)
                     )
                 }

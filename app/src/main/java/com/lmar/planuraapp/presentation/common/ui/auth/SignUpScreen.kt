@@ -121,7 +121,6 @@ fun SignUpScreen(
                     NormalTextComponent(
                         "¡Regístrate para comenzar!",
                         textAlign = TextAlign.Start,
-                        fontSize = 16.sp,
                         modifier = Modifier.padding(horizontal = 5.dp)
                     )
                 }
